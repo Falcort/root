@@ -750,6 +750,13 @@ sap.ui.define(['sap/ui/core/Component',
       /** process initial message, now it is list of existing canvases */
       processInitMsg: function(msg) {
          this.websocket.Send('GETWORKDIR:'); // Update the breadcrumbs
+
+        // This is here to prevent the TreeTable auto mode to add a row that will create a scrollbar
+        let oTreeTable = this.getView().byId("treeTable");
+        let rowCount = oTreeTable.getVisibleRowCount();
+        oTreeTable.setVisibleRowCountMode("Fixed");
+        oTreeTable.setVisibleRowCount(rowCount-1);
+
          var arr = JSROOT.parse(msg);
          if (!arr) return;
          
