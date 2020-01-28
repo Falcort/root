@@ -483,10 +483,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
             showFooter: false,
             showSubHeader: false,
             showHeader: false,
-            content: new Image(ID + "Image", {
-               src: "",
-               densityAware: false
-            })
+            content: new sap.ui.core.HTML(ID+'Container', {content: '<div class="imageViewer"></div>'})
          });
       },
 
@@ -506,16 +503,22 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
          oTabContainer.addItem(tabContainerItem);
          oTabContainer.setSelectedItem(tabContainerItem);
 
-         sap.ui.getCore().byId(ID + 'Image').addStyleClass("imageViewer");
+         // sap.ui.getCore().byId(ID + 'Image').addStyleClass("imageViewer");
       },
 
       getSelectedImageViewer: function (no_warning) {
          let oTabItemString = this.getView().byId("myTabContainer").getSelectedItem();
-
          if (oTabItemString.indexOf("ImageViewer") !== -1)
-            return sap.ui.getCore().byId(oTabItemString + "Image");
+            return sap.ui.getCore().byId(oTabItemString+'Container');
 
          if (!no_warning) MessageToast.show("Sorry, you need to select an image viewer tab", {duration: 1500});
+      },
+
+      setImage: function(src) {
+         const oViewer = this.getSelectedImageViewer(true);
+         const id = oViewer.getId();
+         document.getElementById(id).innerHTML = '';
+         drawImage(src, id);
       },
 
       /* ============================================ */
@@ -978,7 +981,9 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
                let p = Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\"));
                if (p>0) filename = filename.substr(p+1);
                oViewer.getParent().getParent().setAdditionalText(filename);
-               oViewer.setSrc(arr[1]);
+               // oViewer.setSrc(arr[1]);
+
+               this.setImage(arr[1]);
             }
             break;
          case "CANVS":  // canvas created by server, need to establish connection
