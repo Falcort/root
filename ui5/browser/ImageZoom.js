@@ -155,8 +155,6 @@ function createControls(masterID) {
 function initialize(masterID) {
    const img = document.getElementById(masterID + 'Image');
    let imgPosition = img.getBoundingClientRect();
-   img.style.height = Math.round(imgPosition.height) + 'px';
-   img.style.width = Math.round(imgPosition.width) + 'px';
    imgPosition = img.getBoundingClientRect();
 
    initLens();
