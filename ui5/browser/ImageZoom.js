@@ -75,7 +75,7 @@ function createZoom(masterID) {
    style.background = 'white';
    style.cursor = 'move';
    style.display = 'none';
-   style.zIndex = '9999999999999999999999999999';
+   style.zIndex = '9';
 
    DIV[masterID].appendChild(zoom);
    setDragDropAble(masterID, zoom);
@@ -134,6 +134,7 @@ function createControls(masterID) {
       IS_ZOOM[masterID] = !IS_ZOOM[masterID];
 
       if(IS_ZOOM[masterID]) {
+         initialize(masterID);
          document.getElementById(masterID+ 'Zoom').style.display = 'inline-block';
          document.getElementById(masterID+ 'Lens').style.display = 'initial';
 
@@ -144,6 +145,8 @@ function createControls(masterID) {
 
          lensButton.style.opacity = '0.3';
       }
+
+      update(masterID);
    }
 }
 
@@ -159,6 +162,7 @@ function initialize(masterID) {
 
    initLens();
    initZoom();
+   update(masterID);
 
    // Start position and size of the zoom
    function initZoom() {
@@ -175,10 +179,11 @@ function initialize(masterID) {
    function initLens() {
       const lens = document.getElementById(masterID + 'Lens');
 
-      lens.style.left = 0 + 'px';
-      lens.style.top = 0 + 'px';
       lens.style.height = Math.round(imgPosition.height/10) + 'px';
       lens.style.width = Math.round(imgPosition.width/10) + 'px';
+
+      lens.style.left = imgPosition.width/2 - ((Math.round(imgPosition.width/10) - (LENS_BORDER_SIZE * 2))/2) + 'px';
+      lens.style.top = imgPosition.height/2 - ((Math.round(imgPosition.height/10) - (LENS_BORDER_SIZE * 2))/2) + 'px';
    }
 }
 
@@ -343,22 +348,26 @@ function update(masterID) {
     * Update the position of the lens so it cannot move outside the picture
     */
    function updateLens() {
-      // Stop the lens resize to go outside picture (top)
-      if(lens.getBoundingClientRect().top < imagePosition.top) {
-         lens.style.top = 0 + 'px';
-      }
-      // Stop the lens resize to go outside picture (bottom)
-      if(lens.getBoundingClientRect().bottom > imagePosition.bottom) {
-         lens.style.top = imagePosition.height - lens.getBoundingClientRect().height + 'px';
-      }
 
-      // Stop the lens resize to go outside picture (right)
-      if(lens.getBoundingClientRect().right > imagePosition.right) {
-         lens.style.left = imagePosition.width - lens.getBoundingClientRect().width + 'px';
-      }
-      // Stop the lens resize to go outside picture (right)
-      if(lens.getBoundingClientRect().left < imagePosition.left) {
-         lens.style.left = 0 + 'px';
+      // Update elements only if they are visible
+      if(lens.getBoundingClientRect().height !== 0 && lens.getBoundingClientRect().width !== 0) {
+         // Stop the lens resize to go outside picture (top)
+         if(lens.getBoundingClientRect().top < imagePosition.top) {
+            lens.style.top = 0 + 'px';
+         }
+         // Stop the lens resize to go outside picture (bottom)
+         if(lens.getBoundingClientRect().bottom > imagePosition.bottom) {
+            lens.style.top = imagePosition.height - lens.getBoundingClientRect().height + 'px';
+         }
+
+         // Stop the lens resize to go outside picture (right)
+         if(lens.getBoundingClientRect().right > imagePosition.right) {
+            lens.style.left = imagePosition.width - lens.getBoundingClientRect().width + 'px';
+         }
+         // Stop the lens resize to go outside picture (right)
+         if(lens.getBoundingClientRect().left < imagePosition.left) {
+            lens.style.left = 0 + 'px';
+         }
       }
    }
 
@@ -366,22 +375,26 @@ function update(masterID) {
     * Update the position of the zoom so it cannot move outside the window
     */
    function updateZoom() {
-      // Stop the zoom resize to go outside picture (top)
-      if(zoom.getBoundingClientRect().top < 0) {
-         zoom.style.top = -imagePosition.top + 'px';
-      }
-      // Stop the zoom resize to go outside picture (bottom)
-      if(zoom.getBoundingClientRect().bottom > window.innerHeight) {
-         zoom.style.top = window.innerHeight - imagePosition.top - zoom.getBoundingClientRect().height +  'px';
-      }
 
-      // Stop the zoom resize to go outside picture (right)
-      if(zoom.getBoundingClientRect().right > window.innerWidth) {
-         zoom.style.left = window.innerWidth - zoom.getBoundingClientRect().width - imagePosition.left + 'px';
-      }
-      // Stop the zoom resize to go outside picture (left)
-      if(zoom.getBoundingClientRect().left < 0) {
-         zoom.style.left = -imagePosition.left + 'px';
+      // Update elements only if they are visible
+      if(zoom.getBoundingClientRect().width !== 0 && zoom.getBoundingClientRect().height !== 0) {
+         // Stop the zoom resize to go outside picture (top)
+         if(zoom.getBoundingClientRect().top < 0) {
+            zoom.style.top = -imagePosition.top + 'px';
+         }
+         // Stop the zoom resize to go outside picture (bottom)
+         if(zoom.getBoundingClientRect().bottom > window.innerHeight) {
+            zoom.style.top = window.innerHeight - imagePosition.top - zoom.getBoundingClientRect().height +  'px';
+         }
+
+         // Stop the zoom resize to go outside picture (right)
+         if(zoom.getBoundingClientRect().right > window.innerWidth) {
+            zoom.style.left = window.innerWidth - zoom.getBoundingClientRect().width - imagePosition.left + 'px';
+         }
+         // Stop the zoom resize to go outside picture (left)
+         if(zoom.getBoundingClientRect().left < 0) {
+            zoom.style.left = -imagePosition.left + 'px';
+         }
       }
    }
 }
