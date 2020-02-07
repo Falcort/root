@@ -1,0 +1,12 @@
+To start the tests need to start an HTTP server at the root installation folder of Root.
+Then you need to navigate to ui5/browser/test/browserTests.qunit.html
+
+This should open the OpenUI 5 test framework and start the test contained in byID.qunit.js.
+
+If you have trouble, you might have to copy the browser.qunit.html and the test folder yourself into the root build folder.
+You can also directly try to see if the browser.qunit.html work.
+
+URLs :
+- For the tests : https://localhost:PORT/ui5/browser/test/browserTests.qunit.html
+- For the offline browser : https://localhost:PORT/ui5/browser/browser.qunit.html
+(don’t forger to replace PORT)
